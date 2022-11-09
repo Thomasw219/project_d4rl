@@ -356,6 +356,23 @@ register(
 )
 
 register(
+    id='antmaze-umaze-diverse-custom-v2',
+    entry_point='d4rl.locomotion.ant:make_ant_maze_env',
+    max_episode_steps=700,
+    kwargs={
+        'maze_map': maze_env.U_MAZE_CUSTOM,
+        'reward_type':'sparse',
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_v2/Ant_maze_u-maze_noisy_multistart_True_multigoal_True_sparse_fixed.hdf5',
+        'non_zero_reset':True, 
+        'eval':True,
+        'maze_size_scaling': 4.0,
+        'ref_min_score': 0.0,
+        'ref_max_score': 1.0,
+        'v2_resets': True,
+    }
+)
+
+register(
     id='antmaze-medium-play-v2',
     entry_point='d4rl.locomotion.ant:make_ant_maze_env',
     max_episode_steps=1000,

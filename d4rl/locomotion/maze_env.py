@@ -26,6 +26,12 @@ from copy import deepcopy
 RESET = R = 'r'  # Reset position.
 GOAL = G = 'g'
 
+U_MAZE_CUSTOM = [[1, 1, 1, 1, 1],
+          [1, R, G, G, 1],
+          [1, 1, 1, G, 1],
+          [1, G, G, G, 1],
+          [1, 1, 1, 1, 1]]
+
 # Maze specifications for dataset generation
 U_MAZE = [[1, 1, 1, 1, 1],
           [1, R, 0, 0, 1],
@@ -219,18 +225,18 @@ class MazeEnv(gym.Env):
     reset_location = self._rowcol_to_xy((row_sample, col_sample))
     
     # Add some random noise
-    random_x = np.random.uniform(low=0, high=0.5) * 0.5 * self._maze_size_scaling
-    random_y = np.random.uniform(low=0, high=0.5) * 0.5 * self._maze_size_scaling
+    random_x = np.random.uniform(low=-0.5, high=0.5) * 0.5 * self._maze_size_scaling
+    random_y = np.random.uniform(low=-0.5, high=0.5) * 0.5 * self._maze_size_scaling
 
-    return (max(reset_location[0] + random_x, 0), max(reset_location[1] + random_y, 0))
+    return (reset_location[0] + random_x, reset_location[1] + random_y)
 
   def _rowcol_to_xy(self, rowcol, add_random_noise=False):
     row, col = rowcol
     x = col * self._maze_size_scaling - self._init_torso_x
     y = row * self._maze_size_scaling - self._init_torso_y
     if add_random_noise:
-      x = x + np.random.uniform(low=0, high=self._maze_size_scaling * 0.25)
-      y = y + np.random.uniform(low=0, high=self._maze_size_scaling * 0.25)
+      x = x + np.random.uniform(low=self._maze_size_scaling * -0.25, high=self._maze_size_scaling * 0.25)
+      y = y + np.random.uniform(low=self._maze_size_scaling * -0.25, high=self._maze_size_scaling * 0.25)
     return (x, y)
 
   def goal_sampler(self, np_random, only_free_cells=True, interpolate=True):
@@ -250,10 +256,10 @@ class MazeEnv(gym.Env):
     cell = sample_choices[np_random.choice(len(sample_choices))]
     xy = self._rowcol_to_xy(cell, add_random_noise=True)
 
-    random_x = np.random.uniform(low=0, high=0.5) * 0.25 * self._maze_size_scaling
-    random_y = np.random.uniform(low=0, high=0.5) * 0.25 * self._maze_size_scaling
+    random_x = np.random.uniform(low=-0.5, high=0.5) * 0.25 * self._maze_size_scaling
+    random_y = np.random.uniform(low=-0.5, high=0.5) * 0.25 * self._maze_size_scaling
 
-    xy = (max(xy[0] + random_x, 0), max(xy[1] + random_y, 0))
+    xy = (xy[0] + random_x, xy[1] + random_y)
 
     return xy
   
