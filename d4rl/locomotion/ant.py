@@ -199,7 +199,16 @@ class AntMazeEnv(maze_env.MazeEnv, GoalReachingAntEnv, offline_env.OfflineEnv):
       over 100-200 episodes will give a valid estimate of an algorithm's performance.
       """      
       self.set_target()
-    return super().reset()
+    super().reset()
+    desired_goal = self.target_goal
+    achieved_goal = self.get_xy()
+    obs = self._get_obs()
+    obs_dict = dict(
+      observation=obs,
+      desired_goal=desired_goal,
+      achieved_goal=achieved_goal,
+    )
+    return obs_dict
     
   def set_target(self, target_location=None):
     return self.set_target_goal(target_location)

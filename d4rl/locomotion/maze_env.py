@@ -269,7 +269,6 @@ class MazeEnv(gym.GoalEnv):
     else:
       self.target_goal = goal_input
     
-    print ('Target Goal: ', self.target_goal)
     ## Make sure that the goal used in self._goal is also reset:
     self._goal = self.target_goal
 
@@ -307,7 +306,7 @@ class MazeEnv(gym.GoalEnv):
     else:
       inner_next_obs, inner_reward, done, info = self.LOCOMOTION_ENV.step(self, action)
     next_obs = self._get_obs()
-    return next_obs, inner_reward, done, info
+    return inner_next_obs, inner_reward, done, info
 
   def _get_best_next_rowcol(self, current_rowcol, target_rowcol):
     """Runs BFS to find shortest path to target and returns best next rowcol. 
