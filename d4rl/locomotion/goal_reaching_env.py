@@ -29,24 +29,36 @@ class GoalReachingEnv(object):
     base_obs = self.BASE_ENV._get_obs(self)
     goal_direction = self._goal - self.get_xy()
     if not self.eval:
+      print("NOT EVAL")
+      exit()
       obs = np.concatenate([base_obs, goal_direction])
       return obs
     else:
       return base_obs
 
+  def _compute_reward(self, achieved_goal, desired_goal, info):
+    if self.reward_type == 'dense':
+      reward = -np.linalg.norm(desired_goal - achieved_goal)
+    elif self.reward_type == 'sparse':
+      reward = 1.0 if np.linalg.norm(desired_goal - achieved_goal) <= 0.5 else 0.0
+      return reward
+
   def step(self, a):
     self.BASE_ENV.step(self, a)
-    if self.reward_type == 'dense':
-      reward = -np.linalg.norm(self.target_goal - self.get_xy())
-    elif self.reward_type == 'sparse':
-      reward = 1.0 if np.linalg.norm(self.get_xy() - self.target_goal) <= 0.5 else 0.0
-    
+    desired_goal = self.target_goal
+    achieved_goal = self.get_xy()
+    reward = self._compute_reward(achieved_goal, desired_goal, None)
     done = False
     # Terminate episode when we reach a goal
     if self.eval and np.linalg.norm(self.get_xy() - self.target_goal) <= 0.5:
       done = True
 
     obs = self._get_obs()
+    obs = dict(
+      observation=obs,
+      desired_goal=desired_goal,
+      achieved_goal=achieved_goal,
+    )
     return obs, reward, done, {}
 
   def reset_model(self):

@@ -40,7 +40,7 @@ class AntEnv(mujoco_env.MujocoEnv, utils.EzPickle):
   def __init__(self, file_path=None, expose_all_qpos=False,
                expose_body_coms=None, expose_body_comvels=None, non_zero_reset=False):
     if file_path is None:
-      file_path = self.FILE
+      file_path = self.FILE29
 
     self._expose_all_qpos = expose_all_qpos
     self._expose_body_coms = expose_body_coms
@@ -206,6 +206,9 @@ class AntMazeEnv(maze_env.MazeEnv, GoalReachingAntEnv, offline_env.OfflineEnv):
 
   def seed(self, seed=0):
       mujoco_env.MujocoEnv.seed(self, seed)
+
+  def compute_reward(self, achieved_goal, desired_goal, info) -> float:
+    return self._compute_reward(achieved_goal, desired_goal, info)
 
 def make_ant_maze_env(**kwargs):
   env = AntMazeEnv(**kwargs)

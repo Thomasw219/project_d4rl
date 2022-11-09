@@ -136,7 +136,7 @@ HARDEST_MAZE_EVAL_TEST = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
 
 
-class MazeEnv(gym.Env):
+class MazeEnv(gym.GoalEnv):
   LOCOMOTION_ENV = None  # Must be specified by child class.
 
   def __init__(
